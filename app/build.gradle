@@ -24,8 +24,6 @@ android {
         }
     }
 
-
-
     buildTypes {
         release {
             minifyEnabled false
@@ -34,7 +32,19 @@ android {
     }
 }
 
+task uninstall(type: Exec) {
+    commandLine 'adb', 'uninstall', 'com.ork.ndkdemo'
+}
 
+task install(type: Exec, dependsOn: 'assembleDebug') {
+    dependsOn 'uninstall'
+    commandLine 'adb', 'install', '/Users/dafei/git/ndkdemo/app/build/outputs/apk/app-debug.apk'
+}
+
+task start(type: Exec){
+    dependsOn 'install'
+    commandLine 'adb', 'shell', 'am', 'start', '-n','com.ork.ndkdemo/com.ork.ndkdemo.MainActivity'
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
