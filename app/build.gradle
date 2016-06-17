@@ -34,10 +34,12 @@ android {
 
 task uninstall(type: Exec) {
     commandLine 'adb', 'uninstall', 'com.ork.ndkdemo'
+    commandLine 'sh', './path.sh'
 }
 
 task install(type: Exec, dependsOn: 'assembleDebug') {
     dependsOn 'uninstall'
+
     commandLine 'adb', 'install', '/Users/dafei/git/ndkdemo/app/build/outputs/apk/app-debug.apk'
 }
 
