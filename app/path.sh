@@ -1,2 +1,1 @@
-var_path=$PWD  
-echo $var_path
+adb uninstall com.ork.ndkdemo

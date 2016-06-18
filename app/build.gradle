@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId "com.ork.ndkdemo"
@@ -32,21 +32,30 @@ android {
     }
 }
 
+//uninstall firstly
 task uninstall(type: Exec) {
     commandLine 'adb', 'uninstall', 'com.ork.ndkdemo'
-    commandLine 'sh', './path.sh'
 }
 
+//install secondly
 task install(type: Exec, dependsOn: 'assembleDebug') {
     dependsOn 'uninstall'
-
-    commandLine 'adb', 'install', '/Users/dafei/git/ndkdemo/app/build/outputs/apk/app-debug.apk'
+    // we get the folder directory and the relative path of debug apk to locate the
+    // absolutely path for install process
+    def finalPath = projectDir.absolutePath + '/build/outputs/apk/app-debug.apk'
+    def str = new LinkedList <String> ();
+    str.add('adb')
+    str.add('install')
+    str.add(finalPath)
+    commandLine str.toArray()
 }
 
+//start entry activity finally
 task start(type: Exec){
     dependsOn 'install'
     commandLine 'adb', 'shell', 'am', 'start', '-n','com.ork.ndkdemo/com.ork.ndkdemo.MainActivity'
 }
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
